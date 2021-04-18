@@ -1,5 +1,6 @@
 import 'dotenv/config';
 import "reflect-metadata";
+import cors from 'cors'
 import express from 'express'
 import {ApolloServer} from "apollo-server-express";
 import {buildSchema} from "type-graphql";
@@ -8,13 +9,17 @@ import {createConnections} from "typeorm";
 import cookieParser from "cookie-parser";
 import jwt from "jsonwebtoken";
 import {User} from "./entity/User";
-import {createRefreshToken} from "./auth";
+import {createAccessToken, createRefreshToken} from "./auth";
 import {sendRefreshToken} from "./sendRefreshToken";
 
 const main = async () => {
     const app = express()
 
     // Middleware
+    app.use(cors({
+        origin: 'http://localhost:3000',
+        credentials: true
+    }))
     app.use(cookieParser())
 
     // Routes
@@ -43,7 +48,7 @@ const main = async () => {
 
         sendRefreshToken(res, createRefreshToken(user))
 
-        return res.send({ok: true, accessToken: process.env.REFRESH_TOKEN_SECRET!})
+        return res.send({ok: true, accessToken: createAccessToken(user)})
     })
 
     // Apollo Server
@@ -57,7 +62,7 @@ const main = async () => {
             ({req, res})
     })
 
-    server.applyMiddleware({app})
+    server.applyMiddleware({app, cors: false})
 
     app.listen(4000, () => console.log('Server berjalan pada http://localhost:4000' + server.graphqlPath))
 }

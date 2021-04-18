@@ -1,39 +1,16 @@
 import React from 'react'
-import {BrowserRouter as Router, Switch, Route, Link} from 'react-router-dom'
+import {BrowserRouter as Router, Switch, Route} from "react-router-dom";
 import {Home} from "./pages/home";
 import {Register} from "./pages/register";
 import {Login} from "./pages/login";
 import {Bye} from "./pages/bye";
+import {Navbar} from "./components/Navbar";
 
-const Routes: React.FC = () => {
+export const Routes: React.FC = () => {
   return (
     <Router>
       <div>
-        <header>
-          <ul>
-            <li>
-              <Link to='/'>
-                Home
-              </Link>
-            </li>
-            <li>
-              <Link to='/register'>
-                Register
-              </Link>
-            </li>
-            <li>
-              <Link to='/login'>
-                Login
-              </Link>
-            </li>
-            <li>
-              <Link to='/bye'>
-                Bye
-              </Link>
-            </li>
-          </ul>
-        </header>
-
+        <Navbar />
         <Switch>
           <Route exact path='/' component={Home} />
           <Route exact path='/register' component={Register} />
@@ -44,5 +21,3 @@ const Routes: React.FC = () => {
     </Router>
   );
 }
-
-export default Routes
